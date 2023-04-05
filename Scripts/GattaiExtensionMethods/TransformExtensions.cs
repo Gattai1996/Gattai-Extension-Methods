@@ -6,15 +6,18 @@ namespace GattaiExtensionMethods
 {
     public static class TransformExtensions
     {
-        public static void DestroyChildren(this Transform transform)
+        public static IEnumerable<Transform> GetChildren(this Transform transform)
         {
-            var children = new Queue<Transform>();
-            
             for (var i = 0; i < transform.childCount; i++)
             {
-                children.Enqueue(transform.GetChild(i));
+                yield return transform.GetChild(i);
             }
+        }
 
+        public static void DestroyChildren(this Transform transform)
+        {
+            var children = new Queue<Transform>(transform.GetChildren());
+            
             while (children.Any())
             {
                 var child = children.Dequeue();
